@@ -4,15 +4,15 @@ This tool scans though AWS VPC flow logs of the VPC where a OpenShift cluster is
 ## usage
 1. Set up AWS VPC callflow. Currently the logs are written to the S3 bucket that gets created for managed OpenShift clusters like ROSA.
 aws ec2 create-flow-logs \
-  --resource-ids VPC_ID \
+  --resource-ids $VPC_ID \
   --resource-type VPC \
   --traffic-type ALL \
   --log-destination-type s3 \
-  --log-destination arn:aws:s3:::S3_BUCKET_NAME \
-  --region us-east-1 \
+  --log-destination arn:aws:s3:::$S3_BUCKET_NAME \
+  --region $AWS_REGION \
   --log-format '${version} ${vpc-id} ${subnet-id} ${instance-id} ${interface-id} ${account-id} ${type} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${pkt-srcaddr} ${pkt-dstaddr} ${protocol} ${bytes} ${packets} ${start} ${end} ${action} ${tcp-flags} ${log-status}'
 
-2.  kflog AWS_REGION YOUR_OPENSHIFT_CLUSTER_NAME
+2.  kflog $AWS_REGION $YOUR_OPENSHIFT_CLUSTER_NAME
 
 ## next steps
 
