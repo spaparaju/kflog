@@ -19,11 +19,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-func ToString(vpcs []*ec2.Vpc) string {
-	return fmt.Sprintf("%s", vpcs)
-}
+/*
+*	usage : kflog AWS_REGION YOUR_OPENSHIFT_CLUSTER_NAME
+ */
 func main() {
 
+	// Exit if REGION and CLUSTER_NAME are not provided. Need validation checks
 	if len(os.Args) < 3 {
 		return
 	}
@@ -32,18 +33,18 @@ func main() {
 	})
 
 	if err != nil {
+		fmt.Println(" Could not setup AWS connection")
 		return
 	}
 
 	var vpcID = "undefined"
-
 	ec2Client := ec2.New(sess)
 	vpcID, err = getVPCForCluster(ec2Client, os.Args[2])
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(vpcID)
+	fmt.Println("Your VPCId : " + vpcID)
 
 	s3Client := s3.New(sess)
 	bucketName, err := getS3BucketsForCluster(s3Client, os.Args[2])
@@ -51,7 +52,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(bucketName)
+	fmt.Println("Your S3 bucket where the VPC flowlogs written is : " + bucketName)
 
 	keyToDownload, err := getRecentS3Object(s3Client, bucketName)
 	if err != nil {
@@ -61,6 +62,7 @@ func main() {
 
 	downloader := s3manager.NewDownloader(sess)
 
+	// Write the logs to a file with name 'outfile'
 	file, err := os.Create("outfile")
 	if err != nil {
 		fmt.Println(err)
@@ -78,8 +80,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("Downloaded", file.Name(), numBytes, "bytes")
-
+	fmt.Println(" Downloaded the VPC flowlogs : bytes # :", numBytes)
 	body, err := ioutil.ReadFile(file.Name())
 	if err != nil {
 		log.Fatalf("unable to read file: %v", err)
@@ -188,10 +189,10 @@ func getRecentS3Object(s3Client *s3.S3, bucketName string) (string, error) {
 }
 
 func gunzipWrite(w io.Writer, data []byte) error {
-	// Write gzipped data to the client
-	gr, err := gzip.NewReader(bytes.NewBuffer(data))
-	defer gr.Close()
-	data, err = ioutil.ReadAll(gr)
+	reader, _ := gzip.NewReader(bytes.NewBuffer(data))
+	defer reader.Close()
+
+	data, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return err
 	}
