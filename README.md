@@ -8,7 +8,7 @@ aws ec2 create-flow-logs \
   --resource-type VPC \
   --traffic-type ALL \
   --log-destination-type s3 \
-  --log-destination arn:aws:s3:::S#_BUCKET_NAME \
+  --log-destination arn:aws:s3:::S3_BUCKET_NAME \
   --region us-east-1 \
   --log-format '${version} ${vpc-id} ${subnet-id} ${instance-id} ${interface-id} ${account-id} ${type} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${pkt-srcaddr} ${pkt-dstaddr} ${protocol} ${bytes} ${packets} ${start} ${end} ${action} ${tcp-flags} ${log-status}'
 
