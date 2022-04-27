@@ -1,6 +1,8 @@
 # kflog
 This tool scans though AWS VPC flow logs of the VPC where a OpenShift cluster is installed and alerts for any network failures between any of the OpenShift cluster related AWS resources.
 
+## pre-requisites
+-  ~/.aws/credentials contain the required AWS credentials.
 ## usage
 - kflog AWS_REGION VPC_ID page_size_for_slow_network_calls
 
