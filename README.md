@@ -8,4 +8,4 @@ This tool scans though AWS VPC flow logs of the VPC where a OpenShift cluster is
 
 ## next steps
 
- Currently this tool captures the VPCflow logs. The next step is to add more semantic information for the IP addresses listed in these logs and start alert on any network traffic flows.
+ currently this tool captures the VPCflow logs. The next step is to add more semantic information for the IP addresses listed in these logs and start alert on any network traffic flows.
